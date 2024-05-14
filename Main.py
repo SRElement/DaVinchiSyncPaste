@@ -11,7 +11,28 @@ proj = resolve.GetProjectManager().GetCurrentProject()
 timeline = proj.GetTimelineByIndex(1)
 
 #Create AudioTimeline
-AudioTimeline = AudioTimeline(timeline)
+AudioTimeline = AudioTimeline(timeline, proj.GetSetting('timelineFrameRate'))
+
+ClipTimeLine = AudioTimeline.GetTimeLine()
+
+sleep(1) #Wait before starting to allow menu to close 
+#TODO Change to hotkey to begin?
+
+for clipStart in ClipTimeLine: #Find points to insert clips and insert them
+    startTC = AudioTimeline.FindClipStart(clipStart)
+    endTC = AudioTimeline.FindClipEnd(clipStart)["ClipEndTC"]
+
+    timeline.SetCurrentTimecode(startTC)
+    keyboard.send('i') #In Point hotkey
+    sleep(0.1)
+
+    timeline.SetCurrentTimecode(endTC)
+    keyboard.send('o') #Out point hotkey
+    sleep(0.1)
+
+    keyboard.send('shift+f11') #Paste clip to fit between in & out points
+
+    keyboard.send('alt+x') #Deselect hotkeys
 
 
 
@@ -36,7 +57,7 @@ AudioTimeline = AudioTimeline(timeline)
 #     #Paste clip between them
 #     keyboard.send('ctrl+v')
 #     sleep(0.1)
-#     keyboard.send('alt+i') #Deselect hotkeys
-#     keyboard.send('alt+o')
+#     keyboard.send('alt+x') #Deselect hotkeys
+
 
 
