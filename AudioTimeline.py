@@ -1,5 +1,6 @@
 #!/user/bin/env python
 
+from AudioClip import AudioClip
 class AudioTimeline:
 
     _audioTracks = []
@@ -29,7 +30,6 @@ class AudioTimeline:
             f = frames % 1440 % self._frameRate
             return ( "%02d:%02d:%02d:%02d" % ( h, m, s, f))
 
-    
         for track in self._audioTracks:
             for clip in track:
                 clipName = clip.GetName()
@@ -37,26 +37,28 @@ class AudioTimeline:
                 clipEnd = frames_to_TC(clip.GetEnd())
                 toNearestSecond = clipStart[:-2] + '00' #Round to nearest second (All clips that start within that second will be grouped)
 
+                index = 0
+
                 if self._timeline.get(toNearestSecond) == None: #If clip start does not have a key yet (A clip starting at that time does not exist yet)
-                    self._timeline[toNearestSecond] = [{"ClipName":clipName, "ClipStartTC":clipStart, "ClipEndTC":clipEnd, "ClipEndF":clip.GetEnd()}] #Create new key of start timecode
+                    self._timeline[toNearestSecond] = [AudioClip('Test',index,clipStart,clipEnd,clip.GetEnd())] #Create new key of start timecode
                 else: #If it does exist
-                    self._timeline[toNearestSecond].append({"ClipName":clipName, "ClipStartTC":clipStart, "ClipEndTC":clipEnd, "ClipEndF":clip.GetEnd()}) #Append to starting timecode
+                    self._timeline[toNearestSecond].append(AudioClip('Test',index,clipStart,clipEnd,clip.GetEnd())) #Append to starting timecode
 
     
     def FindClipStart(self, startTime):
-        return self._timeline[startTime][0]["ClipStartTC"]
+        return self._timeline[startTime][0].startTimecode
 
     def FindClipEnd(self, startTime): #Find the latest timecode of a clip
 
-        latest = {}
+        latest = None
 
         for clip in self._timeline[startTime]: #Find largest = latest
-            if latest.get("ClipEndF") == None:
+            if latest == None:
                 latest = clip
-            elif latest["ClipEndF"] < clip["ClipEndF"]:
+            elif latest.endFrame < clip.endFrame:
                 latest = clip
     
-        return latest
+        return latest.endTimecode
     
     def GetTimeLine(self):
         return self._timeline
