@@ -142,7 +142,7 @@ def CharCreatorWindow(charName):
         #Fill in data for character
         itm["NameEdit"].Text = charName
         itm["FileButton"].Text = charDict["imgPath"]
-        itm["TrackCombo"].CurrentIndex = int(charDict["track"])
+        itm["TrackCombo"].CurrentIndex = int(charDict["track"])+1
         itm["FolderButton"].Text = charDict["audioPath"]
 
 

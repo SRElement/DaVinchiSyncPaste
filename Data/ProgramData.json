@@ -1,1 +1,19 @@
-{"Characters": {"Ribbit": {"imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\appa.jpg", "track": 0, "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"}, "Oswin": {"imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\appa.jpg", "track": 1, "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"}, "Zakia": {"imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\Autumanal.jpg", "track": 2, "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"}}}
+{
+    "Characters": {
+        "Ribbit": {
+            "imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\appa.jpg",
+            "track": 1,
+            "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"
+        },
+        "Oswin": {
+            "imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\appa.jpg",
+            "track": 2,
+            "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"
+        },
+        "Zakia": {
+            "imgPath": "U:\\Users\\Kai\\Pictures\\pfp\\Autumanal.jpg",
+            "track": 3,
+            "audioPath": "U:\\Users\\Kai\\Desktop\\Test Audio\\"
+        }
+    }
+}

@@ -3,21 +3,20 @@
 from AudioClip import AudioClip
 class AudioTimeline:
 
-    _audioTracks = []
+    _audioTracks = {}
     _timeline = {}
     
     def __init__(self, timeline, frameRate):
         self._frameRate = frameRate
         self.GenerateTracks(timeline)
         self.GenerateAudioTimeline()
-        print(self._timeline)
 
     def GenerateTracks(self, timeline):
         for i in range(1,timeline.GetTrackCount("audio")+1): #Create tracks
             if "Ready" in timeline.GetTrackName("audio",i): #If track is named Ready (So the user can control what tracks they want to use)
                 clipsInTrack = timeline.GetItemListInTrack("audio",i)
                 #TODO Add a way for user to select what clips they want excluded (Color them red?)
-                self._audioTracks.append(clipsInTrack)
+                self._audioTracks[i] = clipsInTrack
 
     def GenerateAudioTimeline(self):
         #Convert frames to timecode
@@ -31,7 +30,7 @@ class AudioTimeline:
             return ( "%02d:%02d:%02d:%02d" % ( h, m, s, f))
 
         for track in self._audioTracks:
-            for clip in track:
+            for clip in self._audioTracks[track]:
                 clipName = clip.GetName()
                 clipStart = frames_to_TC(clip.GetStart())
                 clipEnd = frames_to_TC(clip.GetEnd())
@@ -40,9 +39,9 @@ class AudioTimeline:
                 index = 0
 
                 if self._timeline.get(toNearestSecond) == None: #If clip start does not have a key yet (A clip starting at that time does not exist yet)
-                    self._timeline[toNearestSecond] = [AudioClip('Test',index,clipStart,clipEnd,clip.GetEnd())] #Create new key of start timecode
+                    self._timeline[toNearestSecond] = [AudioClip(track,index,clipStart,clipEnd,clip.GetEnd())] #Create new key of start timecode
                 else: #If it does exist
-                    self._timeline[toNearestSecond].append(AudioClip('Test',index,clipStart,clipEnd,clip.GetEnd())) #Append to starting timecode
+                    self._timeline[toNearestSecond].append(AudioClip(track,index,clipStart,clipEnd,clip.GetEnd())) #Append to starting timecode
 
     
     def FindClipStart(self, startTime):

@@ -2,16 +2,16 @@
 
 class AudioClip:
     
-   def __init__(self, character, index, startTC, endTC, endFrame):
-      self._character = character
+   def __init__(self, track, index, startTC, endTC, endFrame):
+      self._track = track
       self._index = index
       self._startTimecode = startTC
       self._endTimecode = endTC
       self._endFrame = endFrame
 
    @property
-   def character(self):
-      return self._character
+   def track(self):
+      return self._track
    
    @property
    def index(self):
