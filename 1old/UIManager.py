@@ -11,8 +11,7 @@ proj = resolve.GetProjectManager().GetCurrentProject()
 timeline = proj.GetTimelineByIndex(1)
 trackCount = timeline.GetTrackCount("audio")
 
-#Can be found at the start but also have user select it on main screen?
-cwd = "C:\\ProgramData\\Blackmagic Design\\DaVinci Resolve\\Fusion\\Scripts\\Utility"
+cwd = "C:\\ProgramData\\Blackmagic Design\\DaVinci Resolve\\Fusion\\Scripts\\Utility" #Make it find itself
 
 def GetProgramDataDict():
     with open(cwd+"\\Data\\ProgramData.json", 'r') as f:
@@ -62,20 +61,6 @@ def CharCreatorWindow(charName):
                 ui.LineEdit({
                     "ID":"NameEdit",
                     "PlaceholderText":"Enter Character Name"
-                })
-            ]),
-            
-            ui.HGroup({
-                "Weight":0
-            },
-            [
-                ui.Label({
-                    "ID":"varLabel",
-                    "Text":"Image File:"
-                }),
-                ui.Button({
-                    "ID":"FileButton",
-                    "Text":"Select a File"
                 })
             ]),
 
@@ -141,8 +126,7 @@ def CharCreatorWindow(charName):
 
         #Fill in data for character
         itm["NameEdit"].Text = charName
-        itm["FileButton"].Text = charDict["imgPath"]
-        itm["TrackCombo"].CurrentIndex = int(charDict["track"])+1
+        itm["TrackCombo"].CurrentIndex = int(charDict["track"])-1
         itm["FolderButton"].Text = charDict["audioPath"]
 
 
@@ -152,12 +136,6 @@ def CharCreatorWindow(charName):
         MainWindow()
     win.On.CharCreatorWin.Close = OnWindowClose
     win.On.ReturnButton.Clicked = OnWindowClose
-
-    # Find Image File TODO what should the defult path be? recently selected path but also before that
-    def OnFileButtonClicked(ev):
-        selectedPath = str(fu.RequestFile('C:/'))
-        itm["FileButton"].Text = selectedPath
-    win.On.FileButton.Clicked = OnFileButtonClicked
 
     # Find Audio Folder
     def OnFolderButtonClicked(ev):
@@ -170,18 +148,31 @@ def CharCreatorWindow(charName):
 
         #Retrive data
         name = itm["NameEdit"].Text
-        imgPath = itm["FileButton"].Text
-        track = itm["TrackCombo"].CurrentIndex
+        track = itm["TrackCombo"].CurrentIndex + 1
         audioPath = itm["FolderButton"].Text
+        numAudioClips = len(timeline.GetItemListInTrack("audio",track))
+
+
+        audioClips = {}
+
+        for i in range(0,numAudioClips):
+
+            if i == 0:
+                audioClips[i] = name + '.wav'
+            elif i < 10:
+                audioClips[i] = name + '.0' + str(i) + '.wav'
+            else:
+                audioClips[i] = name + str(i) + '.wav'
+
 
         #Open ProgramData to add the character to it
         programDataDict = GetProgramDataDict()
         
         #Add the character data to the JSON
         programDataDict["Characters"][name] = {
-            "imgPath":imgPath,
             "track":track,
-            "audioPath":audioPath
+            "audioPath":audioPath,
+            "audioClips":audioClips
         }
 
         #Write back to file
